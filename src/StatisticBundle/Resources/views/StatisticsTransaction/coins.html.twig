@@ -1,0 +1,65 @@
+{% extends '@Statistic/StatisticsTransaction/layout.html.twig' %}
+
+{% do breadcrumbs.append('Мячики', path('admin_statistics_transation_coins')) %}
+
+{% block title %}{{ parent() }}Мячики{% endblock %}
+
+{% block table_data %}
+    {% if result.data|length %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th rowspan="2">Offer</th>
+                                    <th class="text-center" colspan="2">Apple</th>
+                                    <th class="text-center" colspan="2">Google</th>
+                                    <th colspan="2" class="text-center">Total</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Покупок</th>
+                                    <th class="text-center">Сумма</th>
+                                    <th class="text-center">Покупок</th>
+                                    <th class="text-center">Сумма</th>
+                                    <th class="text-center">Покупок</th>
+                                    <th class="text-center">Сумма</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in result.data %}
+                                    <tr>
+                                        <td>{{ item.offer.name }}</td>
+                                        {% for store in ['apple', 'google'] %}
+                                            <td class="text-right">{{ item.stores[store].count|number }}</td>
+                                            <td class="text-right">{{ item.stores[store].sum|money }}</td>
+                                        {% endfor %}
+                                        <td class="text-right">{{ item.totalCount|number }}</td>
+                                        <td class="text-right">{{ item.totalSum|money }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="bg-gray-dark">
+                                <tr>
+                                    <th class="text-right">ИТОГО</th>
+                                    {% for store in ['apple', 'google'] %}
+                                        <td class="text-right">{{ result.total.stores[store].count|number }}</td>
+                                        <td class="text-right">{{ result.total.stores[store].sum|money }}</td>
+                                    {% endfor %}
+                                    <td class="text-right">{{ result.total.totalCount|number }}</td>
+                                    <td class="text-right">{{ result.total.totalSum|money }}</td>
+                                </tr>
+
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">По вашему запросу ничего не найдено</div>
+    {% endif %}
+{% endblock %}

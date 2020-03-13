@@ -1,0 +1,19 @@
+admin_statistics_transation_coins:
+    path: /coins
+    defaults:
+        _controller: StatisticBundle:Transaction:coins
+
+admin_statistics_transation_ppv:
+    path: /ppv
+    defaults:
+        _controller: StatisticBundle:Transaction:ppv
+
+admin_statistics_transation_subscriptions:
+    path: /subscriptions
+    defaults:
+        _controller: StatisticBundle:Transaction:subscriptions
+
+admin_statistics_transaction_export:
+    path: /export
+    defaults:
+        _controller: StatisticBundle:Transaction:export

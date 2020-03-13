@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    StatisticBundle\:
+        resource: '../../../../src/StatisticBundle/*'
+        exclude: '../../../../src/StatisticBundle/{Document,Filter}'
+
+    StatisticBundle\Controller\:
+        resource: '../../../../src/StatisticBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']

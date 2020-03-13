@@ -1,0 +1,18 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% do breadcrumbs.append('Статистика', path('admin_statistics_index')) %}
+{% do breadcrumbs.append('Продажи', path('admin_statistics_transation_ppv')) %}
+
+{% block title %}{{ parent() }}Статистика. Продажи. {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% form_theme form '@Admin/Form/New/filter_theme.html.twig' %}
+            {{ form(form) }}
+        </div>
+    </div>
+
+    {% block table_data %}
+    {% endblock %}
+{% endblock %}

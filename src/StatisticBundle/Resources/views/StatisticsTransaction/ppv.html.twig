@@ -1,0 +1,121 @@
+{% extends '@Statistic/StatisticsTransaction/layout.html.twig' %}
+
+{% do breadcrumbs.append('Трансляции', path('admin_statistics_transation_ppv')) %}
+
+{% block title %}{{ parent() }}Трансляции{% endblock %}
+
+{% block table_data %}
+    {% if result.data|length %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th rowspan="3">Название</th>
+                                    <th rowspan="3">MediaId</th>
+                                    <th rowspan="3">sku</th>
+                                    <th class="text-center" colspan="6">Apple</th>
+                                    <th class="text-center" colspan="6">Google</th>
+                                    <th colspan="2" rowspan="2" class="text-center">Total</th>
+                                    <th colspan="2" rowspan="2" class="text-center">Total all</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">mobile</th>
+                                    <th colspan="2">smart</th>
+                                    <th colspan="2">total</th>
+                                    <th colspan="2">mobile</th>
+                                    <th colspan="2">smart</th>
+                                    <th colspan="2">total</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                    <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for row in result.data %}
+                                    {% for sku in ['ppv_one_event', 'ppv_one_event_dvr'] %}
+                                        <tr>
+                                            {% if loop.first %}
+                                                <td class="text-right" rowspan="2">{{ row._id.title }}</td>
+                                                <td class="text-right" rowspan="2">{{ row._id.mediaId }}</td>
+                                            {% endif %}
+
+                                            <td>{{ sku }}</td>
+                                            {% for store in ['apple', 'google'] %}
+                                                {% for deviceType in ['mobile', 'smart'] %}
+                                                    <td class="text-right">{{ row.offers[sku].stores[store].deviceTypes[deviceType].count|default(0)|number }}</td>
+                                                    <td class="text-right">{{ row.offers[sku].stores[store].deviceTypes[deviceType].sum|default(0)|money }}</td>
+                                                {% endfor %}
+                                                <td class="text-right">{{ row.offers[sku].stores[store].count|default(0)|number }}</td>
+                                                <td class="text-right">{{ row.offers[sku].stores[store].sum|default(0)|money }}</td>
+                                            {% endfor %}
+
+                                            <td class="text-right">{{ row.offers[sku].count|default(0)|number }}</td>
+                                            <td class="text-right">{{ row.offers[sku].sum|default(0)|money }}</td>
+
+                                            {% if loop.first %}
+                                                <td class="text-right" rowspan="2">{{ row.count|default(0)|number }}</td>
+                                                <td class="text-right" rowspan="2">{{ row.sum|default(0)|money }}</td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="bg-gray-dark">
+                                {% for sku in ['ppv_one_event', 'ppv_one_event_dvr'] %}
+                                    <tr>
+
+                                        {% if loop.first %}
+                                            <th class="text-right" rowspan="2" colspan="2">ИТОГО</th>
+                                        {% endif %}
+
+                                        <th>{{ sku }}</th>
+                                        {% for store in ['apple', 'google'] %}
+                                            {% for deviceType in ['mobile', 'smart'] %}
+                                                <td class="text-right">{{ result.total.offers[sku].stores[store].deviceTypes[deviceType].count|default(0)|number }}</td>
+                                                <td class="text-right">{{ result.total.offers[sku].stores[store].deviceTypes[deviceType].sum|default(0)|money }}</td>
+                                            {% endfor %}
+                                            <td class="text-right">{{ result.total.offers[sku].stores[store].count|default(0)|number }}</td>
+                                            <td class="text-right">{{ result.total.offers[sku].stores[store].sum|default(0)|money }}</td>
+                                        {% endfor %}
+
+                                        <td class="text-right">{{ result.total.offers[sku].count|default(0)|number }}</td>
+                                        <td class="text-right">{{ result.total.offers[sku].sum|default(0)|money }}</td>
+
+                                        {% if loop.first %}
+                                            <td class="text-right" rowspan="2">{{ result.total.count|default(0)|number }}</td>
+                                            <td class="text-right" rowspan="2">{{ result.total.sum|default(0)|money }}</td>
+                                        {% endif %}
+
+                                    </tr>
+                                {% endfor %}
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">По вашему запросу ничего не найдено</div>
+    {% endif %}
+{% endblock %}

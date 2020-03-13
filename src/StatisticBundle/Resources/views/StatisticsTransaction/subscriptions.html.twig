@@ -1,0 +1,91 @@
+{% extends '@Statistic/StatisticsTransaction/layout.html.twig' %}
+
+{% do breadcrumbs.append('Подписки', path('admin_statistics_transation_subscriptions')) %}
+
+{% block title %}{{ parent() }}Подписки{% endblock %}
+
+{% block table_data %}
+    {% if result.data.byStores|length %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th rowspan="3">Offer</th>
+                                    <th class="text-center" colspan="4">Apple</th>
+                                    <th class="text-center" colspan="4">Google</th>
+                                    <th class="text-center" colspan="2" rowspan="2">New</th>
+                                    <th class="text-center" colspan="2" rowspan="2">Renewal</th>
+                                    <th colspan="2" class="text-center" rowspan="2">Total</th>
+                                </tr>
+                                <tr>
+                                    {% for i in range(0, 1) %}
+                                        <th class="text-center" colspan="2"><i class="fa fa-mobile" data-toggle="tooltip" title="Mobile"></i></th>
+                                        <th class="text-center" colspan="2"><i class="fa fa-tv" data-toggle="tooltip" title="Smart"></i></th>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    {% for i in range(0, 6) %}
+                                        <th class="text-center"><i class="fa fa-shopping-basket" data-toggle="tooltip" title="Покупок"></i></th>
+                                        <th class="text-center"><i class="fa fa-dollar" data-toggle="tooltip" title="Сумма"></i></th>
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in result.data.byStores %}
+                                    <tr>
+                                        <td>{{ row.offer.name }}</td>
+                                        {% for store in ['apple', 'google'] %}
+                                            {% for deviceType in ['mobile', 'smart'] %}
+                                                <td class="text-right">{{ row.stores[store].devices[deviceType].count|default(0)|number }}</td>
+                                                <td class="text-right">{{ row.stores[store].devices[deviceType].sum|default(0)|money }}</td>
+                                            {% endfor %}
+                                        {% endfor %}
+
+                                        {% for purchaseType in ['new', 'renewal'] %}
+                                            <td class="text-right">{{ result.data.byPurchaseType[row.sku].purchaseTypes[purchaseType].count|default(0)|number }}</td>
+                                            <td class="text-right">{{ result.data.byPurchaseType[row.sku].purchaseTypes[purchaseType].sum|default(0)|money }}</td>
+                                        {% endfor %}
+
+                                        <td class="text-right">{{ row.count|default(0)|number }}</td>
+                                        <th class="text-right">{{ row.sum|default(0)|money }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="bg-gray-dark">
+                                <tr>
+                                    <th class="text-right">ИТОГО</th>
+                                    {% for store in ['apple', 'google'] %}
+                                        {% for deviceType in ['mobile', 'smart'] %}
+                                            <th class="text-right">{{ result.total.byStores[0].stores[store].devices[deviceType].count|default(0)|number }}</th>
+                                            <th class="text-right">{{ result.total.byStores[0].stores[store].devices[deviceType].sum|default(0)|money }}</th>
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    {% for purchaseType in ['new', 'renewal'] %}
+                                        <th class="text-right">{{ result.total.byPurchaseType[0].purchaseTypes[purchaseType].count|default(0)|number }}</th>
+                                        <th class="text-right">{{ result.total.byPurchaseType[0].purchaseTypes[purchaseType].sum|default(0)|money }}</th>
+                                    {% endfor %}
+
+                                    <th class="text-right">{{ result.total.byStores[0].count|default(0)|number }}</th>
+                                    <th class="text-right">{{ result.total.byStores[0].sum|default(0)|money }}</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <form id="export_data" action="{{ path('admin_statistics_transaction_export') }}" method="POST">
+                            <input type="hidden" name="data" value="{{ result|json_encode}}">
+                            <input type="hidden" name="uri" value="{{ app.request.uri }}">
+                            <div class="text-right"><button class="submit btn btn-success"><i class="fa fa-download"></i> Выгрузить</button ></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">По вашему запросу ничего не найдено</div>
+    {% endif %}
+{% endblock %}

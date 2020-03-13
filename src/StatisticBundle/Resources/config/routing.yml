@@ -1,0 +1,18 @@
+admin_statistics_index:
+    path: /statistics
+    defaults:
+        _controller: StatisticBundle:Statistics:index
+
+admin_statistics_app:
+    path: /app
+    defaults:
+        _controller: StatisticBundle:Statistics:app
+
+admin_statistics_player:
+    path: /player
+    defaults:
+        _controller: StatisticBundle:Statistics:player
+
+_admin_statistics_transation:
+    prefix: /transaction
+    resource: routing/transaction.yml

@@ -1,0 +1,71 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% do breadcrumbs.append('Статистика', path('admin_statistics_index')) %}
+
+{% block title %}{{ parent() }}Статистика. Запуск приложения{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% form_theme form '@Admin/Form/New/filter_theme.html.twig' %}
+            {{ form(form) }}
+        </div>
+    </div>
+
+    {% if data.items|length %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th rowspan="2">Дата</th>
+                                    <th rowspan="2">Тип устройства</th>
+                                    <th rowspan="2">Регистрации</th>
+                                    <th colspan="2" class="text-center">Запуск приложения</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Все</th>
+                                    <th class="text-center">Уникальные</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in data.items %}
+                                    <tr>
+                                        <td>{{ item.date.format('d.m.Y') }}</td>
+                                        <td>{{ item.deviceType }}</td>
+                                        <td class="text-right">{{ item.new|number }}</td>
+                                        <td class="text-right">{{ item.data.runAll|number }}</td>
+                                        <td class="text-right">{{ item.data.runUnique|number }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="bg-gray-dark">
+                                <tr>
+                                    <th class="text-right" colspan="2">ИТОГО (на странице) </th>
+                                    <th class="text-right">{{ data.new|number }}</th>
+                                    <th class="text-right">{{ data.all|number }}</th>
+                                    <th class="text-right">{{ data.unique|number }}</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-right" colspan="2">ИТОГО</th>
+                                    <th class="text-right">{{ data.total._new|number }}</th>
+                                    <th class="text-right">{{ data.total._all|number }}</th>
+                                    <th class="text-right">{{ data.total._unique|number }}</th>
+                                </tr>
+
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">По вашему запросу ничего не найдено</div>
+    {% endif %}
+{% endblock %}
